@@ -1,0 +1,22 @@
+# grab official ubuntu image
+FROM ubuntu:20.04
+
+# pass thru keyboard commands for installation
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=America
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# yeet all pre-installed libraries
+RUN apt update && apt -y upgrade && apt -y install apt-utils \
+  --no-install-recommends && \
+  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# clean up any mess that was made
+RUN apt-get update --fix-missing && apt-get upgrade -y && apt-get install -y \
+        sudo dialog git openssh-server wget curl cmake nano python3 python3-pip \
+        python3-empy python3-nose python3-setuptools build-essential gedit \
+        libgtest-dev libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0 \
+        libboost-all-dev libgbm-dev libgbm1 libgl1-mesa-dev libgl1-mesa-dri \
+        libgl1-mesa-glx libglu1-mesa libglu1-mesa-dev mesa-common-dev \
+        xserver-xorg xinit mesa-utils libegl1-mesa  \
+        qt5-default libopencv-dev python3-opencv software-properties-common nano
